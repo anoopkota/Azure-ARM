@@ -1,0 +1,50 @@
+trigger:
+- master  # Replace with your desired branch trigger
+
+pool: Name
+
+parameters:
+- name: storageAccountName
+  type: string
+  default: 'YourStorageAccountName'  # Replace with the default storage account name
+  displayName: 'Storage Account Name'
+
+- name: storageAccountSku
+  type: string
+  default: 'YourStorageAccountSku'  # Replace with the default storage account SKU (e.g., Standard_LRS)
+  displayName: 'Storage Account SKU'
+
+- name: privateEndpointName
+  type: string
+  default: 'YourPrivateEndpointName'  # Replace with the default private endpoint name
+  displayName: 'Private Endpoint Name'
+
+- name: location
+  type: string
+  default: 'YourLocation'  # Replace with the default Azure region
+  displayName: 'Azure Region'
+
+- name: subnetId
+  type: string
+  default: '/subscriptions/your-subscription-id/resourceGroups/your-resource-group/providers/Microsoft.Network/virtualNetworks/your-vnet/subnets/your-subnet'  # Replace with the default subnet ID
+  displayName: 'Subnet ID'
+
+jobs:
+- job: DeployADLSGen2WithPrivateEndpoint
+  steps:
+  - checkout: self
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+
+  - task: AzureResourceGroupDeployment@2
+    inputs:
+      azureSubscription: 'YourAzureSubscription'  # Replace with your Azure service connection name
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: 'YourResourceGroupName'  # Replace with your desired resource group name
+      location: 'YourLocation'  # Replace with your desired Azure region
+      templateLocation: 'FilePath'  # Use FilePath for local file reference
+      csmFile: '$(System.DefaultWorkingDirectory)/ARM/datalake.json'  # Relative path to your ARM template
+      overrideParameters: '-storageAccountName "YourStorageAccountName" -storageAccountSku "YourStorageAccountSku" -privateEndpointName "YourPrivateEndpointName" -subnetId "YourSubnetId"'
+      deploymentMode: 'Incremental'

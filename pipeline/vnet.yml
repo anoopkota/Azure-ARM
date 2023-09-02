@@ -1,0 +1,25 @@
+trigger:
+- master  # Replace with your desired branch trigger
+
+pool: Name
+
+stages:
+- stage: Deploy
+  jobs:
+  - job: DeployARMTemplate
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+
+    - task: AzureResourceGroupDeployment@2
+      inputs:
+        azureSubscription:  'Your Azure Subscription Name'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'YourResourceGroupName'  # Replace with your desired resource group name
+        location: 'YourLocation'  # Replace with your desired Azure region
+        templateLocation: 'Linked artifact'
+        csmFile: '$(System.DefaultWorkingDirectory)/ARM/vnet.json'  # Replace with the path to your ARM template file
+        overrideParameters: '-vnetName "YourVNetName" -subnetName "YourSubnetName"'  # Replace with your desired parameter values
+        deploymentMode: 'Incremental'
