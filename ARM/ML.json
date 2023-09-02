@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+        {
+            "type": "Microsoft.MachineLearningServices/workspaces",
+            "apiVersion": "2022-12-01-preview ",
+            "name": "[parameters('workspaceName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "description": "[parameters('workspaceDescription')]"
+            },
+            "resources": [
+                {
+                    "type": "privateEndpoints",
+                    "apiVersion": "2021-03-01",
+                    "name": "[concat(parameters('workspaceName'), '/privatelinkconfig')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('workspaceName'))]"
+                    ],
+                    "properties": {
+                        "privateLinkServiceConnections": [
+                            {
+                                "name": "privatelinkworkspace",
+                                "properties": {
+                                    "privateLinkServiceConnectionState": {
+                                        "status": "Approved",
+                                        "description": "Private endpoint connection is approved"
+                                    },
+                                    "groupIds": []
+                                }
+                            }
+                        ],
+                        "subnet": {
+                            "id": "[parameters('subnetId')]"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "parameters": {
+        "workspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Azure Machine Learning workspace"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location/region for the Azure Machine Learning workspace"
+            }
+        },
+        "workspaceDescription": {
+            "type": "string",
+            "metadata": {
+                "description": "Description for the Azure Machine Learning workspace"
+            }
+        },
+        "subnetId": {
+            "type": "string",
+            "metadata": {
+                "description": "ID of the subnet where the Private Endpoint should be placed"
+            }
+        }
+    },
+    "outputs": {}
+}
+  

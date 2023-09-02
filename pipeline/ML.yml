@@ -1,0 +1,45 @@
+trigger:
+- master  # Replace with your desired branch trigger
+
+pool: Name
+
+parameters:
+- name: workspaceName
+  type: string
+  default: 'YourMLWorkspaceName'  # Replace with the default workspace name
+  displayName: 'ML Workspace Name'
+
+- name: location
+  type: string
+  default: 'YourLocation'  # Replace with the default Azure region
+  displayName: 'Azure Region'
+
+- name: workspaceDescription
+  type: string
+  default: 'YourWorkspaceDescription'  # Replace with the default workspace description
+  displayName: 'Workspace Description'
+
+- name: subnetId
+  type: string
+  default: '/subscriptions/your-subscription-id/resourceGroups/your-resource-group/providers/Microsoft.Network/virtualNetworks/your-vnet/subnets/your-subnet'  # Replace with the default subnet ID
+  displayName: 'Subnet ID'
+
+jobs:
+- job: DeployMLWorkspaceWithPrivateEndpoint
+  steps:
+  - checkout: self
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+
+  - task: AzureResourceGroupDeployment@2
+    inputs:
+      azureSubscription: 'YourAzureSubscription'  # Replace with your Azure service connection name
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: 'YourResourceGroupName'  # Replace with your desired resource group name
+      location: $(location)
+      templateLocation: 'FilePath'  # Use FilePath for local file reference
+      csmFile: '$(System.DefaultWorkingDirectory)/ARM/ML.json'  # Relative path to your ARM template
+      overrideParameters: '-workspaceName "$(workspaceName)" -location "$(location)" -workspaceDescription "$(workspaceDescription)" -subnetId "$(subnetId)"'
+      deploymentMode: 'Incremental'
