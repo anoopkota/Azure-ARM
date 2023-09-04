@@ -1,0 +1,65 @@
+trigger:
+- master  # Replace with your desired branch
+
+pool: name
+
+parameters:
+- name: resourceGroupName
+  displayName: 'Resource Group Name'
+  type: string
+  default: 'YourResourceGroup'  # Replace with your desired default value
+  values:
+    - 'YourResourceGroup'  # Add allowed values if needed
+
+- name: dataFactoryName
+  displayName: 'Data Factory Name'
+  type: string
+  default: 'YourDataFactoryName'  # Replace with your desired default value
+
+- name: location
+  displayName: 'Location'
+  type: string
+  default: 'East US'  # Replace with your desired Azure region
+
+- name: dataLakeLinkedServiceName
+  displayName: 'Data Lake Linked Service Name'
+  type: string
+  default: 'YourDataLakeLinkedServiceName'  # Replace with your actual linked service name
+
+- name: privateEndpointName
+  displayName: 'Private Endpoint Name'
+  type: string
+  default: 'YourPrivateEndpointName'  # Replace with your desired default value
+
+- name: vnetName
+  displayName: 'VNet Name'
+  type: string
+  default: 'YourVNetName'  # Replace with your VNet name
+
+- name: subnetName
+  displayName: 'Subnet Name'
+  type: string
+  default: 'YourSubnetName'  # Replace with your subnet name
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Deploy ARM Template'
+  inputs:
+    azureSubscription: 'YourAzureServiceConnection'  # Replace with your Azure service connection
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: $(location)
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/ARM/adf.json'  # Replace with the path to your ARM template
+    overrideParameters: 
+      - '-dataFactoryName $(dataFactoryName)'
+      - '-dataLakeLinkedServiceName $(dataLakeLinkedServiceName)'
+      - '-privateEndpointName $(privateEndpointName)'
+      - '-vnetName $(vnetName)'
+      - '-subnetName $(subnetName)'
+    deploymentMode: 'Incremental'
