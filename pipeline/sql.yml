@@ -1,0 +1,71 @@
+trigger:
+- master  # Replace with your desired branch
+
+pool: Name
+
+parameters:
+- name: resourceGroupName
+  displayName: 'Resource Group Name'
+  type: string
+  default: 'YourResourceGroup'  # Replace with your desired default value
+  values:
+    - 'YourResourceGroup'  # Add allowed values if needed
+
+- name: sqlServerName
+  displayName: 'SQL Server Name'
+  type: string
+  default: 'YourSqlServerName'  # Replace with your desired default value
+
+- name: adminLogin
+  displayName: 'SQL Server Admin Login'
+  type: string
+  default: 'YourAdminLogin'  # Replace with your desired default value
+
+- name: adminPassword
+  displayName: 'SQL Server Admin Password'
+  type: string
+  default: 'YourAdminPassword'  # Replace with your desired default value
+
+- name: databaseName
+  displayName: 'Database Name'
+  type: string
+  default: 'YourDatabaseName'  # Replace with your desired default value
+
+- name: vnetName
+  displayName: 'VNet Name'
+  type: string
+  default: 'YourVNetName'  # Replace with your desired default value
+
+- name: privateLinkServiceName
+  displayName: 'Private Link Service Name'
+  type: string
+  default: 'YourPrivateLinkServiceName'  # Replace with your desired default value
+
+- name: privateEndpointName
+  displayName: 'Private Endpoint Name'
+  type: string
+  default: 'YourPrivateEndpointName'  # Replace with your desired default value
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Deploy ARM Template'
+  inputs:
+    azureSubscription: 'YourAzureServiceConnection'  # Replace with your Azure service connection
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US'  # Replace with your desired Azure region
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/ARM/sql.json'  # Replace with the path to your ARM template
+    overrideParameters: 
+      - '-adminLogin $(adminLogin)'
+      - '-adminPassword $(adminPassword)'
+      - '-databaseName $(databaseName)'
+      - '-vnetName $(vnetName)'
+      - '-privateLinkServiceName $(privateLinkServiceName)'
+      - '-privateEndpointName $(privateEndpointName)'
+    deploymentMode: 'Incremental'
