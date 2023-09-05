@@ -17,16 +17,16 @@
             }
         },
         {
-            "type": "Microsoft.Storage/storageAccounts/networkRules",
-            "apiVersion": "2021-04-01",
-            "name": "[concat(parameters('storageAccountName'), '/default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ],
+            "type": "Microsoft.Storage/storageAccounts/privateEndpointConnections",
+            "apiVersion": "2022-09-01",
+            "name": "string",
             "properties": {
-                "defaultAction": "Deny",
-                "virtualNetworkRules": [],
-                "ipRules": []
+            "privateEndpoint": {},
+            "privateLinkServiceConnectionState": {
+                "actionRequired": "string",
+                "description": "string",
+                "status": "string"
+                }
             }
         }
     ],
