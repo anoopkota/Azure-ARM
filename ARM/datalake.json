@@ -14,7 +14,8 @@
             "kind": "StorageV2",
             "properties": {
                 "isHnsEnabled": true
-            }
+            },
+            "publicNetworkAccess": "Disabled" 
         }
     ],
     "parameters": {
