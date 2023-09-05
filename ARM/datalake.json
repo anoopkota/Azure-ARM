@@ -13,33 +13,7 @@
             },
             "kind": "StorageV2",
             "properties": {
-                "supportsHttpsTrafficOnly": true
-            }
-        },
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2020-11-01",
-            "name": "[parameters('privateEndpointName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ],
-            "properties": {
-                "privateLinkServiceConnections": [
-                    {
-                        "name": "privatelinkstorage",
-                        "properties": {
-                            "privateLinkServiceConnectionState": {
-                                "status": "Enabled",
-                                "description": "Private endpoint connection is enabled"
-                            },
-                            "groupIds": []
-                        }
-                    }
-                ],
-                "subnet": {
-                    "id": "[parameters('subnetId')]"
-                }
+                "isHnsEnabled": true
             }
         }
     ],
@@ -56,22 +30,10 @@
                 "description": "Sku of the Storage Account (e.g., Standard_LRS)"
             }
         },
-        "privateEndpointName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Private Endpoint"
-            }
-        },
         "location": {
             "type": "string",
             "metadata": {
                 "description": "Location/region for the resources"
-            }
-        },
-        "subnetId": {
-            "type": "string",
-            "metadata": {
-                "description": "ID of the subnet where the Private Endpoint should be placed"
             }
         }
     },
