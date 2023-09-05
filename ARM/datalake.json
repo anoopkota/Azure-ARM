@@ -13,10 +13,21 @@
             },
             "kind": "StorageV2",
             "properties": {
-                "isHnsEnabled": true,
-                "allowBlobPublicAccess": "False"
-            },
-            "publicNetworkAccess": "Disabled" 
+                "isHnsEnabled": true
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/networkRules",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('storageAccountName'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+            "properties": {
+                "defaultAction": "Deny",
+                "virtualNetworkRules": [],
+                "ipRules": []
+            }
         }
     ],
     "parameters": {
