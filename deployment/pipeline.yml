@@ -1,0 +1,82 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps for building, testing, deployment, and more:
+# More info: https://aka.ms/yaml
+
+trigger:
+- master
+
+variables:
+    vmImageName: "ubuntu-latest"
+
+pool:
+  vmImage: $(vmImageName)
+
+stages:
+- stage: spatialcalculator
+  displayName: 'Spatial Calculator Stage'
+  jobs:
+  - job: Build
+    displayName: 'Build'
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Set Python Version'
+      inputs:
+        versionSpec: '3.10.12'
+
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Install Dependencies'
+
+    - script: |
+        python src/spatial_calculator.py
+      displayName: 'Run Spatial Calculator'
+
+- stage: modeltrainer
+  dependsOn: spatialcalculator
+  displayName: 'Model Trainer Stage'
+  jobs:
+  - job: Build
+    displayName: 'Build'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Set Python Version'
+      inputs:
+        versionSpec: '3.10.12'
+
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Install Dependencies'
+
+    - script: |
+        python src/model_trainer.py
+      displayName: 'Run Model Trainer'
+
+- stage: digcostpredictor
+  dependsOn: modeltrainer
+  displayName: 'Digcost Predictor Stage'
+  jobs:
+  - job: Build
+    displayName: 'Build'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Set Python Version'
+      inputs:
+        versionSpec: '3.10.12'
+
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Install Dependencies'
+
+    - script: |
+        python src/digcost_predictor.py
+      displayName: 'Run Digcost Predictor'
