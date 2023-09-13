@@ -27,22 +27,8 @@
           "minimalTlsVersion": "string",
           "primaryUserAssignedIdentityId": "string",
           "version": "12.0"  // Change to your desired SQL Server version
-        },
-        "resources": [
-          {
-            "type": "privateEndpointConnections",
-            "apiVersion": "2021-05-01-preview",
-            "name": "privateEndpointConnectionName",
-            "properties": {
-              "privateLinkServiceConnections": [
-                {
-                  "id": "[resourceId('Microsoft.Network/privateLinkServices/privateEndpoints', 'yourVNetName', 'yourPrivateLinkServiceName', 'yourPrivateEndpointName')]"
-                }
-              ]
-            }
-          }
-        ]
-      },
+        }
+      },  
       {
         "type": "Microsoft.Sql/servers/databases",
         "apiVersion": "2022-03-01-preview",

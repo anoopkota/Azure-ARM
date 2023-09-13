@@ -31,21 +31,6 @@ parameters:
   type: string
   default: 'YourDatabaseName'  # Replace with your desired default value
 
-- name: vnetName
-  displayName: 'VNet Name'
-  type: string
-  default: 'YourVNetName'  # Replace with your desired default value
-
-- name: privateLinkServiceName
-  displayName: 'Private Link Service Name'
-  type: string
-  default: 'YourPrivateLinkServiceName'  # Replace with your desired default value
-
-- name: privateEndpointName
-  displayName: 'Private Endpoint Name'
-  type: string
-  default: 'YourPrivateEndpointName'  # Replace with your desired default value
-
 steps:
 - task: UsePythonVersion@0
   inputs:
@@ -65,7 +50,4 @@ steps:
       - '-adminLogin $(adminLogin)'
       - '-adminPassword $(adminPassword)'
       - '-databaseName $(databaseName)'
-      - '-vnetName $(vnetName)'
-      - '-privateLinkServiceName $(privateLinkServiceName)'
-      - '-privateEndpointName $(privateEndpointName)'
     deploymentMode: 'Incremental'

@@ -14,29 +14,6 @@
                     "type": "LinkedServiceReference"
                 }
             }
-        },
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2021-05-01",
-            "name": "yourPrivateEndpointName",
-            "location": "East US",  // Change to your desired location
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories', 'yourDataFactoryName')]"
-            ],
-            "properties": {
-                "subnet": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'yourVNetName', 'yourSubnetName')]"
-                },
-                "privateLinkServiceConnections": [
-                    {
-                        "name": "privateLinkServiceConnectionName",
-                        "privateLinkServiceConnectionState": {
-                            "status": "Approved",
-                            "description": "Approved by manual intervention"
-                        }
-                    }
-                ]
-            }
         }
     ],
     "outputs": {}

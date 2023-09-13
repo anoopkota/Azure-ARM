@@ -11,11 +11,6 @@ parameters:
   values:
     - 'YourResourceGroup'  # Add allowed values if needed
 
-- name: dataFactoryName
-  displayName: 'Data Factory Name'
-  type: string
-  default: 'YourDataFactoryName'  # Replace with your desired default value
-
 - name: location
   displayName: 'Location'
   type: string
@@ -26,20 +21,10 @@ parameters:
   type: string
   default: 'YourDataLakeLinkedServiceName'  # Replace with your actual linked service name
 
-- name: privateEndpointName
-  displayName: 'Private Endpoint Name'
-  type: string
-  default: 'YourPrivateEndpointName'  # Replace with your desired default value
-
 - name: vnetName
   displayName: 'VNet Name'
   type: string
   default: 'YourVNetName'  # Replace with your VNet name
-
-- name: subnetName
-  displayName: 'Subnet Name'
-  type: string
-  default: 'YourSubnetName'  # Replace with your subnet name
 
 steps:
 - task: UsePythonVersion@0
@@ -59,7 +44,4 @@ steps:
     overrideParameters: 
       - '-dataFactoryName $(dataFactoryName)'
       - '-dataLakeLinkedServiceName $(dataLakeLinkedServiceName)'
-      - '-privateEndpointName $(privateEndpointName)'
-      - '-vnetName $(vnetName)'
-      - '-subnetName $(subnetName)'
     deploymentMode: 'Incremental'
