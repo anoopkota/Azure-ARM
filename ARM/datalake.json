@@ -15,19 +15,6 @@
             "properties": {
                 "isHnsEnabled": true
             }
-        },
-        {
-            "type": "Microsoft.Storage/storageAccounts/privateEndpointConnections",
-            "apiVersion": "2022-09-01",
-            "name": "string",
-            "properties": {
-            "privateEndpoint": {},
-            "privateLinkServiceConnectionState": {
-                "actionRequired": "string",
-                "description": "string",
-                "status": "string"
-                }
-            }
         }
     ],
     "parameters": {

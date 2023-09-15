@@ -21,11 +21,6 @@ parameters:
   type: string
   default: 'YourDataLakeLinkedServiceName'  # Replace with your actual linked service name
 
-- name: vnetName
-  displayName: 'VNet Name'
-  type: string
-  default: 'YourVNetName'  # Replace with your VNet name
-
 steps:
 - task: UsePythonVersion@0
   inputs:
