@@ -69,12 +69,11 @@
             "apiVersion": "2021-11-01",
             "name": "[parameters('containerRegistryName')]",
             "location": "[parameters('location')]",
+            "sku": {
+                    "name": "Standard"
+                },
             "properties": {
-                "adminUserEnabled": true,
-                "sku": {
-                    "name": "Standard", 
-                    "tier": "Standard" 
-                }
+                "adminUserEnabled": true
             }
         },
         {
