@@ -1,0 +1,150 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {},
+    "parameters": {
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the storage account."
+        }
+      },
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "australiaeast",
+          "brazilsouth",
+          "canadacentral",
+          "centralus",
+          "eastasia",
+          "eastus",
+          "eastus2",
+          "francecentral",
+          "japaneast",
+          "koreacentral",
+          "northcentralus",
+          "northeurope",
+          "southeastasia",
+          "southcentralus",
+          "uksouth",
+          "westcentralus",
+          "westus",
+          "westus2",
+          "westeurope",
+          "usgovvirginia"
+        ],
+        "metadata": {
+          "description": "Specifies the location of the Azure Machine Learning workspace and dependent resources."
+        }
+      },
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the Key Vault."
+        }
+      },
+      "applicationInsightsName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of Application Insights."
+        }
+      },
+      "containerRegistryName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the container registry."
+        }
+      },
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the Azure Machine Learning workspace."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2022-05-01",
+        "name": "[parameters('storageAccountName')]",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "encryption": {
+            "services": {
+              "blob": {
+                "enabled": true
+              },
+              "file": {
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "supportsHttpsTrafficOnly": true,
+          "minimumTlsVersion": "TLS1_2",
+          "allowBlobPublicAccess": false,
+          "networkAcls": {
+            "defaultAction": "Deny"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "apiVersion": "2022-07-01",
+        "name": "[parameters('keyVaultName')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "tenantId": "[subscription().tenantId]",
+          "sku": {
+            "name": "standard",
+            "family": "A"
+          },
+          "accessPolicies": [],
+          "enableSoftDelete": true
+        }
+      },
+      {
+        "type": "Microsoft.Insights/components",
+        "apiVersion": "2020-02-02",
+        "name": "[parameters('applicationInsightsName')]",
+        "location": "[parameters('location')]",
+        "kind": "web",
+        "properties": {
+          "Application_Type": "web"
+        }
+      },
+      {
+        "type": "Microsoft.ContainerRegistry/registries",
+        "apiVersion": "2022-02-01-preview",
+        "name": "[parameters('containerRegistryName')]",
+        "sku": {
+          "name": "premium"
+        },
+        "location": "[parameters('location')]",
+        "properties": {
+          "adminUserEnabled": false
+        }
+      },
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces",
+        "apiVersion": "2022-10-01",
+        "name": "[parameters('workspaceName')]",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "location": "[parameters('location')]",
+        "properties": {
+          "friendlyName": "[parameters('workspaceName')]",
+          "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+          "keyVault": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+          "applicationInsights": "[resourceId('Microsoft.Insights/components', parameters('applicationInsightsName'))]",
+          "containerRegistry": "[resourceId('Microsoft.ContainerRegistry/registries', parameters('containerRegistryName'))]"
+        }
+      }
+    ]
+  }
+  
